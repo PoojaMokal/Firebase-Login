@@ -5,6 +5,7 @@ import 'package:firebase/app/sigin_app/validators.dart';
 import 'package:firebase/services/auth.dart';
 import 'package:firebase/widgets/form_submit_button.dart';
 import 'package:firebase/widgets/platform_alert_dialog.dart';
+import 'package:firebase/widgets/platform_exception_alertdialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,15 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   bool _submitted = false;
   bool _isLoading = false;
 
+  @override
+  void dispose(){
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
+
   void _submit() async{
     print("submit Called");
     setState(() {
@@ -46,10 +56,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       Navigator.of(context).pop();
     }catch(e){
-     PlatformAlertDialog(
+     PlatformExceptionAlertDialog(
        title:  'Sign in Failed',
-       content: e.toString(),
-       defaultActionText: 'OK',
+       exception: e,
      ).show(context);
     } finally{
       setState(() {
